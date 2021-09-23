@@ -77,7 +77,7 @@ void TrafficLight::cycleThroughPhases()
     std::random_device rd; 
     std::mt19937 eng(rd());
     std::uniform_int_distribution<> distr(4,6);
-    int cycleDuration = 1; 
+    int cycleDuration = distr(eng); 
     auto lastUpdate = std::chrono::system_clock::now();
 
     while(true) {
@@ -86,7 +86,8 @@ void TrafficLight::cycleThroughPhases()
         (std::chrono::system_clock::now() - lastUpdate).count();
 
         if (timeSinceLastUpdate >= cycleDuration) {
-            std::this_thread::sleep_for(std::chrono::seconds(distr(eng)));
+            // the whole sleep time is not required here 
+            // std::this_thread::sleep_for(std::chrono::seconds(distr(eng)));
             if (_currentPhase == TrafficLightPhase::green) {
                 _messages.send(std::move(TrafficLightPhase::red));
                 _currentPhase = TrafficLightPhase::red;
